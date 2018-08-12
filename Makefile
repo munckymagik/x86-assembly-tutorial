@@ -1,5 +1,7 @@
 CC := gcc
 CFLAGS  = -std=c99
+# CFLAGS += -g
+# CFLAGS += -O1
 CFLAGS += -m32
 CFLAGS += -Wall
 CFLAGS += -Wextra
