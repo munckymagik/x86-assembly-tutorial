@@ -128,4 +128,4 @@ _main:
 	retl
 ```
 
-## Calling printf
+## Calling a function
