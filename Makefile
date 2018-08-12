@@ -25,3 +25,6 @@ $(OUTPUTS): Makefile
 
 %.s: %.c
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
+
+%.out: %.s
+	$(CC) $(CFLAGS) $(<) -o $(@)
