@@ -21,7 +21,7 @@ info:
 
 .PHONY: clean
 clean:
-	rm -f $(OUTPUTS)
+	rm -f *.out
 
 $(OUTPUTS): Makefile
 
