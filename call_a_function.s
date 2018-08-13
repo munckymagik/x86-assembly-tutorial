@@ -1,34 +1,39 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.macosx_version_min 10, 12
-	.globl	_main
-	.p2align	4, 0x90
-_main:                                  ## @main
-## BB#0:
-	pushl	%ebp
-	movl	%esp, %ebp
-	subl	$24, %esp
-	movl	$17, %eax
-	movl	$0, -4(%ebp)
-	movl	$17, (%esp)
-	movl	%eax, -8(%ebp)          ## 4-byte Spill
-	calll	_add_13
-	addl	$24, %esp
-	popl	%ebp
-	retl
+.text
+.globl	_main
+_main:
+  # Setup the stack
+  pushl %ebp
+  movl %esp, %ebp
 
-	.p2align	4, 0x90
-_add_13:                                ## @add_13
-## BB#0:
-	pushl	%ebp
-	movl	%esp, %ebp
-	pushl	%eax
-	movl	8(%ebp), %eax
-	movl	%eax, -4(%ebp)
-	movl	-4(%ebp), %eax
-	addl	$13, %eax
-	addl	$4, %esp
-	popl	%ebp
-	retl
+  # Place the two arguments to pass to add on the stack
+  pushl $2
+  pushl $3
 
+  # Call the add function
+  calll _add
 
-.subsections_via_symbols
+  # Clean up the stack after function call
+  addl	$8, %esp
+
+  # Restore the previous stack pointer address
+  popl %ebp
+
+  # Return to calling code
+  retl
+
+_add:
+  # Setup the stack
+  pushl %ebp
+  movl %esp, %ebp
+
+  # Load the first argument into EAX
+  movl 8(%ebp), %eax
+
+  # Add the second argument to the value already loaded in EAX
+  addl 12(%ebp), %eax
+
+  # $estore the previous stack pointer address
+  popl %ebp
+
+  # Return to calling code
+  retl
