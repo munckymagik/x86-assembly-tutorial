@@ -2,15 +2,15 @@
 
 * Will use Gnu AS (GAS) and AT&T syntax
 
-## A main method with no body
+## The smallest program we can write
 
+Here is the smallest program we can write. It declares a `main` method that does nothing except immediately return setting a `0` exit status.
 
 ```s
-# main_method_return_0.s
 	.text
 	.globl	_main
 _main:
-	movl	$13, %eax
+	movl	$0, %eax
 	retl
 ```
 
@@ -20,12 +20,13 @@ Save this to a file called `main_method_return_0.s`, then you can compile it by 
 $ gcc -m32 main_method_return_0.s -o main_method_return_0.out
 ```
 
-Then execute and examine the exit status of the process:
+Then execute and examine the exit status of the process to see if it worked:
 
 ```
 $ ./main_method_return_0.out; echo "Exit status was: $?"
 ```
 
+TODO explain the generic portions, flesh this out more.
 
 Meaning:
 
@@ -49,28 +50,28 @@ Declares the label `_main`. This is the symbol that was previously made visible 
 
 
 ```s
-	xorl	%eax, %eax
+	movl	$0, %eax
 ```
 
-Next `%eax` is XOR'd with itself, placing the result back back in `%eax`. Effectively `ax = ax XOR ax`. The side-effect of this is to set all bits in AX to 0. Presumably this is a more "efficient" trick to zero a register than to `movl $0, $eax` which uses immediate addressing to `$0`?
+This loads the literal number `0` into the accumulator register called AX.
+
+We are working 32-bit mode so the `mov` instruction is suffixed with an `l` which makes it the 32-bit version of the `mov` instruction.
+
+Similarly, because we using a 32-bit instruction we also need to access AX register as a 32-bit value. We do this by prepending the register name with an `e`, thus `eax`.
 
 ```s
 	retl
 ```
 
-Finally, `ret` loads the value currently on the stack into the `%eip` instruction-pointer. Effectively making the CPU continue executing where we left off before `_main` was called.
+Finally, `ret` returns control to the lower-level code which called our `main` function. Effectively making the CPU continue executing where we left off before `main` function was called.
 
-If we don't want to return zero we can achieve this by loading number into EAX explicitly.
+If we want to return a different number we can just change the value loaded into AX.
 
 ```s
+	.text
+	.globl	_main
 _main:
-	pushl	%ebp
-	movl	%esp, %ebp
-	pushl	%eax
-	movl	$17, %eax    # <--- this was xorl	%eax, %eax in the previous example
-	movl	$0, -4(%ebp)
-	addl	$4, %esp
-	popl	%ebp
+	movl	$17, %eax    # <--- we now return the exit code 17
 	retl
 ```
 
