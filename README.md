@@ -107,7 +107,7 @@ Similarly, because we are using a 32-bit instruction we also need to access the 
 retl
 ```
 
-Finally, `ret` returns control to the system-code which called our `main` function. Effectively telling the CPU continue executing where it left off before our `main` function was called.
+Finally, `ret` returns control to the system-code which called our `main` function. Effectively telling the CPU to continue executing where it left off before our `main` function was called.
 
 If we want to set a different exit status we can change the value loaded into AX.
 
@@ -253,7 +253,62 @@ We now have three arguments in addition to the program path so we correctly see 
 
 ### Explanation
 
-TODO
+Let's break down the body of our new `main` function  line-by-line.
+
+```s
+  # Set up the stack
+  pushl %ebp
+  movl %esp, %ebp
+```
+
+These two lines are very important and are one half of the missing _stack management discipline_ alluded to in chapter 1. We omitted them deliberately to keep our program as small as possible. They need to appear together at the beginning of all of our functions from now on.
+
+Their important role is to set aside an area of what is known as _stack_ memory for our function to store any local variables it might need while it is executing. This dedicated area of memory is referred to as a _stack frame_.
+
+Each function in a program has its own _stack frame_. Because functions can call other functions in a kind of chain, there may be many _stack frames_ on the _stack_ at any one time.
+
+The word _stack_ here refers to the data structure where you _push_ and _pop_ values on and off the top. You only ever operate on the value on the top of the stack.
+
+The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. They shows that the concept of having a _stack_ is not just a software issue, but an idea actually baked into the CPU hardware architecture.
+
+BP holds the memory address relative to which our function will look up stack data it has access to. We will see an example of this shortly.
+
+SP holds the memory address of the top of the stack. It is used to quickly find the next free memory when we need to push something data onto the stack.
+
+The area of memory between the addresses in SP and BP contains all stack data local to the currently executing function.
+
+So what do these two lines actually do?
+
+```s
+pushl %ebp
+```
+
+This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp` so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
+
+```s
+  movl %esp, %ebp
+```
+
+This line copies the address stored in SP to BP, which effectively updates the base pointer to refer to the top of the stack. Having done this our function can now safely push any local data it might need.
+
+```s
+  # Load the value of argc into eax
+  movl 8(%ebp), %eax
+```
+
+There is some new syntax here. Putting parentheses around `%ebp` accesses the value stored at the address held in BP. Prefixing with `8` offsets the address in BP by `+8`. So we are looking up a value in the stack relative to the base pointer.
+
+TODO explain stack address direction.
+
+The thing to remember is:
+* Positive offsets reach back towards function arguments and
+* Negative offsets reach forward to local variables.
+
+```s
+  # Return to calling code
+  popl %ebp
+  retl
+```
 
 ---
 
@@ -278,7 +333,7 @@ Here we are again, we have a small example and yet there are loads of interestin
 
 #### 1) Don't count the program path
 
-Update the example code to deduct 1 from the count in `argc`, so we only see the number actual arguments we passed on the command line.
+Update the example code to deduct 1 from the count in `argc`, so we only see the number of actual arguments we passed on the command line.
 
 The `subl` instruction will let you subtract a value from another held in memory.
 
