@@ -6,9 +6,11 @@ Intro notes:
 * Will use Gnu AS (GAS) "like" assembler. The LLVM assembler on Mac OS X can be used as it has the same interface, similarly the MinGW assembler on Windows as I believe it is derived from GAS.
 * We will use AT&T syntax rather than Intel, as this is the format compilers and disassemblers seem to output by default according to my limited experience so far.
 
-## The smallest program we can write
+## The smallest program we can get away with
 
 Here is the smallest program we can write. It declares a `main` method that does nothing except immediately return a `0` exit status.
+
+The heading says "get away with" because in order to be so small we are ommitting an inportant discipline required for writing reliable assembly language code - managing the stack - but this doesn't matter for now. We'll explain more on this later.
 
 ```s
 .text
@@ -38,7 +40,7 @@ Exit status was: 0
 
 And with that, you've made your first program in assembly language. Not quite "Hello world", but we'll get there later.
 
-## Explanation
+### Explanation
 
 Let's examine this program line by line:
 
@@ -97,6 +99,16 @@ $ gcc -m32 main_method_return_0.s -o main_method_return_0.out
 $ ./main_method_return_0.out; echo "Exit status was: $?"
 Exit status was: 17
 ```
+
+### Key points
+
+* We need to use the `.text` directive to place our program code in the correct section of the compiled executable.
+* To make a function we name a block of code using a label e.g. `_main`
+* The `_main` function needs to be made visible to the linker using `.globl _main`
+* To return a value from a function we need to place it into the AX register
+* We use the `retl` function to exit our function an return to the code that called it.
+
+## Receiving input
 
 ## Calling a function
 
