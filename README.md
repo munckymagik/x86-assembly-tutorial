@@ -192,3 +192,7 @@ $ objdump -S /bin/false > false.s
 ## Chapter X: Printing text output to the terminal
 
 ## Chapter X: Calling a function
+
+## Chapter X: Deciding what to do
+
+## Chapter X: Looping and repeating
