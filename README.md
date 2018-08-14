@@ -6,7 +6,34 @@ Intro notes:
 * Will use Gnu AS (GAS) "like" assembler. The LLVM assembler on Mac OS X can be used as it has the same interface, similarly the MinGW assembler on Windows as I believe it is derived from GAS.
 * We will use AT&T syntax rather than Intel, as this is the format compilers and disassemblers seem to output by default according to my limited experience so far.
 
-## The smallest program we can get away with
+## Installing the required tools
+
+Basically you need the `gcc` compiler (or an equivalent like `clang` with it's `gcc` frontend`).
+
+On Mac OS X:
+
+* You need to install Xcode with the Xcode command-line tools
+
+On Ubuntu/debian Linux:
+
+```
+$ apt install build-essential
+```
+
+On Windows:
+
+* Install the [MinGW](http://www.mingw.org/) toolset
+
+Once you've completed installation run the following to check you can access the required tools:
+
+```
+$ gcc --version
+$ objdump --version
+```
+
+If you get output from both tools you are good to go.
+
+## Chapter 1: The smallest assembly language program we can get away with
 
 Below is the smallest program we can write in assembly language. The heading says "get away with" because in order to be so small we are ommitting an important discipline required for writing reliable assembly language code - managing the stack - but this doesn't matter for now. We'll explain more on this later.
 
