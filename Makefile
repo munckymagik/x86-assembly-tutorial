@@ -8,22 +8,22 @@ CFLAGS += -Wextra
 CFLAGS += -pedantic
 CFLAGS += -Werror
 
-SRCS := $(wildcard *.c)
-OUTPUTS := $(patsubst %.c,%.s,$(SRCS))
+SRCS := $(wildcard *.s)
+BINS := $(patsubst %.s,%.out,$(SRCS))
 
 .PHONY: all
-all: $(OUTPUTS)
+all: $(BINS)
 
 .PHONY: info
 info:
 	@echo $(SRCS)
-	@echo $(OUTPUTS)
+	@echo $(BINS)
 
 .PHONY: clean
 clean:
 	rm -f *.out
 
-$(OUTPUTS): Makefile
+$(BINS): Makefile
 
 %.s: %.c
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
