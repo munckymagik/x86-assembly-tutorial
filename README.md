@@ -121,6 +121,45 @@ Then considering executable instructions:
 
 ---
 
+### Exercises
+
+#### 1) An equivalent C program
+
+Given this C program roughly equivalent to our example:
+
+```c
+int main() {
+    return 0;
+}
+```
+
+Save it to a file called `main.c` then compile it to assembly language form using:
+
+```
+$ gcc -S -m32 main.c -o main.s
+```
+
+Open `main.s` in your editor.
+
+* What differences do you notice between this and our simple program?
+* What changes in the output if you make the return value `17` instead of `0`?
+
+#### 2) Disassembling true and false
+
+Two of the most basic Unix system tools are the `true` and `false` commands. One returns an exit status of `0` and the other returns `1`.
+
+Using `objdump` disassemble these two binaries (*):
+
+```
+$ objdump -S /bin/true > true.s
+$ objdump -S /bin/false > false.s
+```
+
+1) Open the two `.s` files in your editor. What observations can you make?
+2) Why does `true` return `0` and `false` return `1`?
+
+(*) on Mac OS X `objdump` might produce simpler output if you pass the `-macho` option in addition to `-S` (this is short for _Mach-O_ not _machismo_).
+
 ## Receiving input
 
 ## Calling a function
