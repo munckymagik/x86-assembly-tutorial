@@ -269,11 +269,11 @@ Each function in a program has its own _stack frame_. Because functions can call
 
 The word _stack_ here refers to the data structure where you _push_ and _pop_ values on and off the top. You only ever operate on the value on the top of the stack.
 
-The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. They shows that the concept of having a _stack_ is not just a software issue, but an idea actually baked into the CPU hardware architecture.
+The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a _stack_ is not just a software issue, but an idea actually baked into the CPU hardware architecture.
 
 BP holds the memory address relative to which our function will look up stack data it has access to. We will see an example of this shortly.
 
-SP holds the memory address of the top of the stack. It is used to quickly find the next free memory when we need to push something data onto the stack.
+SP holds the memory address of the top of the stack. It is used to quickly find the next free memory when we need to push some data onto the stack.
 
 The area of memory between the addresses in SP and BP contains all stack data local to the currently executing function.
 
@@ -283,7 +283,7 @@ So what do these two lines actually do?
 pushl %ebp
 ```
 
-This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp` so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
+This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp`, so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
 
 ```s
   movl %esp, %ebp
