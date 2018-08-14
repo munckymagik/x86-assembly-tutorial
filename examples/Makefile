@@ -21,7 +21,7 @@ info:
 
 .PHONY: clean
 clean:
-	rm -f *.out
+	rm -rf *.out *.dSYM
 
 $(BINS): Makefile
 
