@@ -187,9 +187,11 @@ $ objdump -S /bin/false > false.s
 
 (*) on Mac OS X `objdump` might produce simpler output if you pass the `-macho` option in addition to `-S` (this is short for _Mach-O_ not _machismo_).
 
-## Receiving input
+## Chapter 2: Receiving input from the command line
 
-## Calling a function
+## Chapter X: Printing text output to the terminal
+
+## Chapter X: Calling a function
 
 ```s
 .text
