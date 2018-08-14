@@ -59,6 +59,8 @@ Then execute and examine the exit status of the process to see if it worked:
 $ ./main_method_return_0.out; echo "Exit status was: $?"
 ```
 
+To see our output, we echo the value of the `$?` shell variable which always contains the exit status of the last program to run.
+
 You should see it output:
 
 ```
@@ -188,6 +190,97 @@ $ objdump -S /bin/false > false.s
 (*) on Mac OS X `objdump` might produce simpler output if you pass the `-macho` option in addition to `-S` (this is short for _Mach-O_ not _machismo_).
 
 ## Chapter 2: Receiving input from the command line
+
+⚠️ WIP
+
+In this chapter we are going to build the equivalent of the following C program:
+
+```c
+int main(int argc, char *argv[]) {
+    return argc;
+}
+```
+
+Command line arguments are passed to a C or assembly language program via two parameters to the `main` function. The first parameter `argc` is an integer which will contain the count of arguments passed on the command line. The second parameter `argv` is an array containing the command-line argument strings.
+
+In this example, we continue abusing the exit status value as a way to get output from our programs by returning the count of input arguments `argc` as the exit code.
+
+Here is the assembly language version:
+
+```s
+.text
+
+.globl _main
+_main:
+  # Set up the stack
+  pushl %ebp
+  movl %esp, %ebp
+
+  # Load the value of argc into eax
+  movl 8(%ebp), %eax
+
+  # Return to calling code
+  popl %ebp
+  retl
+```
+
+Save this to a file called `cli_input.s`, then you can compile it by running:
+
+```
+$ gcc -m32 cli_input.s -o cli_input.out
+```
+
+Then execute and examine the exit status of the process to see if it worked:
+
+```
+$ ./cli_input.out; echo "The number of arguments was: $?"
+```
+
+You should see the output:
+
+```
+The number of arguments was: 1
+```
+
+Eh!? But we haven't passed any arguments!! It turns out there is always one argument in `argv` even if we haven't passed anything on the command line and that is the file path of the program itself. We will see what this looks like in a later chapter. Let's run it again and pass our own arguments.
+
+```
+$ ./cli_input.out 1 2 3; echo "The number of arguments was: $?"
+The number of arguments was: 4
+```
+
+We now have three arguments in addition to the program path so we correctly see the number `4` as our exit status.
+
+### Explanation
+
+TODO
+
+---
+
+### Key points
+
+Here we are again, we have a small example and yet there are loads of interesting facts we learned.
+
+* TODO passing args to main
+* TODO the stack is a thing
+* TODO there is a base pointer
+* TODO there is a stack pointer
+* TODO setting up the stack
+* TODO safely returning to calling code
+* TODO addressing values relative our base pointer
+* TODO parameters will have positive offsets, locals will have negative
+* TODO to get the first parameter we have to offset over the saved base pointer and the return instruction pointer
+* TODO To return we now need to restore the base-pointer
+
+---
+
+### Exercises
+
+#### 1) Don't count the program path
+
+Update the example code to deduct 1 from the count in `argc`, so we only see the number actual arguments we passed on the command line.
+
+The `subl` instruction will let you subtract a value from another held in memory.
 
 ## Chapter X: Printing text output to the terminal
 
