@@ -18,6 +18,12 @@
         this.num_bytes = num_bytes;
       }
 
+      renderMarker(x, y) {
+        this.g.path(`M${x},${y} l-10,10 l20,0 l-10,-10`).attr({ fill: 'black' });
+        this.g.text(x, y + 20, "ebp")
+          .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000" });
+      }
+
       render() {
         const start_address = 0xffff0000
         const g = this.g;
@@ -26,6 +32,8 @@
         const row_w = cells_per_row * unit;
         const row_h = unit;
         const row_space = row_h + unit * 2;
+
+        this.renderMarker(this.x, this.y + row_h);
 
         for (let row = 0; row * cells_per_row < this.num_bytes; row++) {
           const row_x = this.x;
@@ -60,30 +68,8 @@
     const fmtAddress = address => `0x${pad(address.toString(16))}`;
 
     window.addEventListener('load', () => {
-      let dashed = { fill: "none", stroke: "#666", "stroke-dasharray": "- " };
-
-      // Raphael.fn.byte = function(x, y, isEnd) {
-      //   let end = (isEnd) ? " v-40" : "";
-      //   return this.path(['M', x, y] + "m40,0 h-40 v40 h40" + end);
-      // };
-      // Raphael.fn.memory = function (x, y, n, startAddress) {
-      //   for (let i = 0; i < n; ++i) {
-      //     let offset = i * 40;
-      //     let isEnd = i === n - 1;
-      //     this.byte(x + offset, y, isEnd);
-
-      //     if (i % 4 === 0) {
-      //       this
-      //         .text(x + offset, y + 50, fmtAddress(startAddress + i))
-      //         .attr({ font: '14px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
-      //     }
-      //   }
-      // };
       let r = Raphael("holder", 800, 600);
       r.rect(1, 1, 798, 598);
-      // r.memory(40, 300, 16, 0xffff0000);
-      // r.path("M40,295 v-50 m0,50 l-5,-5 m5,5 l5,-5");
-      // r.text(40, 235, "%ebp, %esp");
 
       let mem = new Memory(r, 40, 40, 64);
       mem.render();
