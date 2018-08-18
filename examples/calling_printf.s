@@ -1,29 +1,29 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.macosx_version_min 10, 12
-	.globl	_main
-	.p2align	4, 0x90
-_main:                                  ## @main
-## BB#0:
-	pushl	%ebp
-	movl	%esp, %ebp
-	subl	$24, %esp
-	calll	L0$pb
-L0$pb:
-	popl	%eax
-	leal	L_.str-L0$pb(%eax), %eax
-	movl	$0, -4(%ebp)
-	movl	%eax, (%esp)
-	calll	_printf
-	xorl	%ecx, %ecx
-	movl	%eax, -8(%ebp)          ## 4-byte Spill
-	movl	%ecx, %eax
-	addl	$24, %esp
-	popl	%ebp
-	retl
+.text
 
-	.section	__TEXT,__cstring,cstring_literals
-L_.str:                                 ## @.str
-	.asciz	"Hello world\n"
+.globl _main
+_main:
+  # Set up the stack
+  pushl %ebp
+  movl %esp, %ebp
 
+  # Padding to guarantee the correct stack alignment when we call printf
+  pushl $0
 
-.subsections_via_symbols
+  # Set the argument for printf, pushes the address of the "Hello world\n" string on the stack
+  pushl $hello_world
+
+  # In the debugger check `expression -f hex -- $esp & 0xF` is 0 at this point to prove stack alignment
+  calll _printf
+
+  # Remove the padding and argument from the stack
+  addl $8, %esp
+
+  # Set the exit status
+  xorl %eax, %eax
+
+  # Return to calling code
+  popl %ebp
+  retl
+
+hello_world:
+  .asciz "Hello world\n"
