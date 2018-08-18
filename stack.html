@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Stack animation</title>
+  <script
+     src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.js"
+     integrity="sha256-MPXjTSEImVJI1834JAHubdK7Lts1VTUPJmCQ9zKAjyA="
+     crossorigin="anonymous"></script>
+  <script>
+    const pad = number => ("0000000" + number).slice(-8);
+    const fmtAddress = address => `0x${pad(address.toString(16))}`;
+
+    window.addEventListener('load', () => {
+      let dashed = { fill: "none", stroke: "#666", "stroke-dasharray": "- " };
+
+      Raphael.fn.byte = function(x, y, isEnd) {
+        let end = (isEnd) ? " v-40" : "";
+        return this.path(['M', x, y] + "m40,0 h-40 v40 h40" + end);
+      };
+      Raphael.fn.memory = function (x, y, n, startAddress) {
+        for (let i = 0; i < n; ++i) {
+          let offset = i * 40;
+          let isEnd = i === n - 1;
+          this.byte(x + offset, y, isEnd);
+
+          if (i % 4 === 0) {
+            this
+              .text(x + offset, y + 50, fmtAddress(startAddress + i))
+              .attr({ font: '14px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
+          }
+        }
+      };
+      let r = Raphael("holder", 800, 600);
+
+      r.rect(1, 1, 798, 598);
+      r.memory(40, 300, 16, 0xffff0000);
+
+      r.path("M40,295 v-50 m0,50 l-5,-5 m5,5 l5,-5");
+      r.text(40, 235, "%ebp, %esp");
+    })
+  </script>
+</head>
+<body>
+  <h1>Stack animation</h1>
+  <div id="holder"></div>
+</body>
+</html>
