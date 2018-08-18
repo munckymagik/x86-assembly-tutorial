@@ -11,33 +11,45 @@
      crossorigin="anonymous"></script>
   <script>
     class Memory {
-      constructor(g, num_bytes) {
+      constructor(g, x, y, num_bytes) {
         this.g = g;
+        this.x = x;
+        this.y = y;
         this.num_bytes = num_bytes;
       }
 
       render() {
+        const start_address = 0xffff0000
         const g = this.g;
         const unit = 40;
         const cells_per_row = 16;
         const row_w = cells_per_row * unit;
         const row_h = unit;
-        const row_space = row_h + unit/2;
+        const row_space = row_h + unit * 2;
 
         for (let row = 0; row * cells_per_row < this.num_bytes; row++) {
-          const row_x = 0;
-          const row_y = row * row_space;
+          const row_x = this.x;
+          const row_y = this.y + row * row_space;
           g.rect(row_x, row_y, row_w, row_h)
-            .attr({ 'stroke-width': '2' })
+            .attr({ 'stroke-width': '2', fill: '#eee' })
 
-          for (let cell = 1; cell < cells_per_row; cell++) {
-            const div_x = row_x + cell * unit;
-            const div_y = row_y;
-            let p = g.path(`M${div_x},${div_y} v${unit}`);
-            if (cell % 4 !== 0) {
-              p.attr({ "stroke-dasharray": "- " });
-            } else {
-              p.attr({ 'stroke-width': '2' });
+          for (let cell = 0; cell < cells_per_row; cell++) {
+            const cell_x = row_x + cell * unit;
+            const cell_y = row_y;
+
+            if (cell > 0) {
+              let p = g.path(`M${cell_x},${cell_y} v${unit}`);
+              if (cell % 4 !== 0) {
+                p.attr({ "stroke-dasharray": "- " });
+              } else {
+                p.attr({ 'stroke-width': '2' });
+              }
+            }
+
+            if (cell % 4 === 0) {
+              const address = start_address + row * cells_per_row + cell;
+              g.text(cell_x, cell_y - 10, fmtAddress(address))
+                .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
             }
           }
         }
@@ -73,7 +85,7 @@
       // r.path("M40,295 v-50 m0,50 l-5,-5 m5,5 l5,-5");
       // r.text(40, 235, "%ebp, %esp");
 
-      let mem = new Memory(r, 17);
+      let mem = new Memory(r, 40, 40, 64);
       mem.render();
     })
   </script>
