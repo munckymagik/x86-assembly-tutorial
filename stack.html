@@ -10,41 +10,76 @@
      integrity="sha256-MPXjTSEImVJI1834JAHubdK7Lts1VTUPJmCQ9zKAjyA="
      crossorigin="anonymous"></script>
   <script>
+    class Memory {
+      constructor(g, num_bytes) {
+        this.g = g;
+        this.num_bytes = num_bytes;
+      }
+
+      render() {
+        const g = this.g;
+        const unit = 40;
+        const cells_per_row = 16;
+        const row_w = cells_per_row * unit;
+        const row_h = unit;
+        const row_space = row_h + unit/2;
+
+        for (let row = 0; row * cells_per_row < this.num_bytes; row++) {
+          const row_x = 0;
+          const row_y = row * row_space;
+          g.rect(row_x, row_y, row_w, row_h)
+            .attr({ 'stroke-width': '2' })
+
+          for (let cell = 1; cell < cells_per_row; cell++) {
+            const div_x = row_x + cell * unit;
+            const div_y = row_y;
+            let p = g.path(`M${div_x},${div_y} v${unit}`);
+            if (cell % 4 !== 0) {
+              p.attr({ "stroke-dasharray": "- " });
+            } else {
+              p.attr({ 'stroke-width': '2' });
+            }
+          }
+        }
+      }
+    }
+
     const pad = number => ("0000000" + number).slice(-8);
     const fmtAddress = address => `0x${pad(address.toString(16))}`;
 
     window.addEventListener('load', () => {
       let dashed = { fill: "none", stroke: "#666", "stroke-dasharray": "- " };
 
-      Raphael.fn.byte = function(x, y, isEnd) {
-        let end = (isEnd) ? " v-40" : "";
-        return this.path(['M', x, y] + "m40,0 h-40 v40 h40" + end);
-      };
-      Raphael.fn.memory = function (x, y, n, startAddress) {
-        for (let i = 0; i < n; ++i) {
-          let offset = i * 40;
-          let isEnd = i === n - 1;
-          this.byte(x + offset, y, isEnd);
+      // Raphael.fn.byte = function(x, y, isEnd) {
+      //   let end = (isEnd) ? " v-40" : "";
+      //   return this.path(['M', x, y] + "m40,0 h-40 v40 h40" + end);
+      // };
+      // Raphael.fn.memory = function (x, y, n, startAddress) {
+      //   for (let i = 0; i < n; ++i) {
+      //     let offset = i * 40;
+      //     let isEnd = i === n - 1;
+      //     this.byte(x + offset, y, isEnd);
 
-          if (i % 4 === 0) {
-            this
-              .text(x + offset, y + 50, fmtAddress(startAddress + i))
-              .attr({ font: '14px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
-          }
-        }
-      };
+      //     if (i % 4 === 0) {
+      //       this
+      //         .text(x + offset, y + 50, fmtAddress(startAddress + i))
+      //         .attr({ font: '14px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
+      //     }
+      //   }
+      // };
       let r = Raphael("holder", 800, 600);
-
       r.rect(1, 1, 798, 598);
-      r.memory(40, 300, 16, 0xffff0000);
+      // r.memory(40, 300, 16, 0xffff0000);
+      // r.path("M40,295 v-50 m0,50 l-5,-5 m5,5 l5,-5");
+      // r.text(40, 235, "%ebp, %esp");
 
-      r.path("M40,295 v-50 m0,50 l-5,-5 m5,5 l5,-5");
-      r.text(40, 235, "%ebp, %esp");
+      let mem = new Memory(r, 17);
+      mem.render();
     })
   </script>
 </head>
 <body>
   <h1>Stack animation</h1>
-  <div id="holder"></div>
+  <div id="holder" style="border: 1px solid black"></div>
 </body>
 </html>
