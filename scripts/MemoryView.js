@@ -14,9 +14,12 @@ class MemoryView {
   onChangeHandler() {
     return ((address, count) => {
       while (count-- > 0) {
-        let elem = this.values.get(address);
+        const elem = this.values.get(address);
         elem.attr({
           text: fmtAddress(this.memory.getUint8(address), 2)
+        });
+        elem.animate({ 'transform': 's1.4' }, 50, () => {
+          elem.animate({ 'transform': 's1' }, 100)
         });
         ++address;
       }
