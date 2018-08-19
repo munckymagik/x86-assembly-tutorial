@@ -21,7 +21,7 @@
       }
 
       render(g) {
-        const start_address = 0xffff0000
+        const start_address = 0xffff0000 + this.num_bytes;
         const unit = 40;
         const cells_per_row = 16;
         const row_w = cells_per_row * unit;
@@ -50,7 +50,10 @@
             }
 
             if (cell % 4 === 0) {
-              const address = start_address + row * cells_per_row + cell;
+              const row_address = start_address - row * cells_per_row;
+              const col_address = -cell;
+              const address = row_address + col_address;
+
               g.text(cell_x, cell_y - 10, fmtAddress(address))
                 .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'start'});
             }
