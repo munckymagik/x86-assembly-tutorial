@@ -7,6 +7,20 @@ class MemoryView {
     this.y = y;
     this.num_bytes = memory.size;
     this.memory = memory;
+    this.values = new Map();
+    this.memory.onChange(this.onChangeHandler());
+  }
+
+  onChangeHandler() {
+    return ((address, count) => {
+      while (count-- > 0) {
+        let elem = this.values.get(address);
+        elem.attr({
+          text: fmtAddress(this.memory.getUint8(address), 2)
+        });
+        ++address;
+      }
+    }).bind(this);
   }
 
   render(g) {
@@ -37,7 +51,8 @@ class MemoryView {
         }
 
         const value = this.memory.getUint8(address);
-        this.renderValue(g, cell_x, cell_y, unit, value);
+        const valElem = this.renderValue(g, cell_x, cell_y, unit, value);
+        this.values.set(address, valElem);
       }
     }
   }
@@ -71,7 +86,7 @@ class MemoryView {
   }
 
   renderValue(g, cell_x, cell_y, unit, value) {
-    g.text(cell_x + unit / 2, cell_y + unit / 2, fmtAddress(value, 2))
+    return g.text(cell_x + unit / 2, cell_y + unit / 2, fmtAddress(value, 2))
       .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'middle' });
   }
 

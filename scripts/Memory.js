@@ -10,10 +10,20 @@ class Memory {
 
   setUint32(address, value) {
     this.dataView.setUint32(address, value, true);
+    this.notify(address, 4);
   }
 
   getUint8(address) {
     return this.dataView.getUint8(address);
+  }
+
+  onChange(handler) {
+    this.onChangedHandler = handler;
+  }
+
+  notify(address, count) {
+    if (!this.onChangedHandler) { return; }
+    this.onChangedHandler(address, count);
   }
 }
 

@@ -20,6 +20,14 @@
 
     let memView = new MemoryView(40, 40, memory);
     memView.render(r);
+
+    let c = 0;
+    const handle = setInterval(() => {
+      memory.setUint32(0, 0x01 << c);
+      if (c++ === 31) {
+        clearInterval(handle);
+      }
+    }, 500)
   </script>
 
   <style>
