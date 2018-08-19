@@ -9,11 +9,17 @@
   <script defer src="scripts/raphael.min.js.gz"></script>
   <script type="module">
     import { MemoryView } from './scripts/MemoryView.js';
+    import { Memory } from './scripts/Memory.js';
 
     let r = Raphael("holder", 800, 600);
 
-    let mem = new MemoryView(40, 40, 64);
-    mem.render(r);
+    let memory = new Memory(32);
+    memory.setUint32(0, 0xdeadbeef);
+    memory.setUint32(4, 0x20);
+    memory.setUint32(8, 0xdeadbeef);
+
+    let memView = new MemoryView(40, 40, memory);
+    memView.render(r);
   </script>
 
   <style>

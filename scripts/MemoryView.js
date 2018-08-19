@@ -1,11 +1,12 @@
-const pad = number => ("0000000" + number).slice(-8);
-const fmtAddress = address => `0x${pad(address.toString(16))}`;
+const pad = (number, width) => ("0000000" + number).slice(-(width || 8));
+const fmtAddress = (address, width) => `0x${pad(address.toString(16), width)}`;
 
 class MemoryView {
-  constructor(x, y, num_bytes) {
+  constructor(x, y, memory) {
     this.x = x;
     this.y = y;
-    this.num_bytes = num_bytes;
+    this.num_bytes = memory.size;
+    this.memory = memory;
   }
 
   render(g) {
@@ -29,16 +30,20 @@ class MemoryView {
 
         this.renderCellDivider(g, cell, cell_x, cell_y, unit);
 
+        const address = this.address(row, cell, cells_per_row);
+
         if (cell % 4 === 3) {
-          const address = this.address(row, cell, cells_per_row);
           this.renderAddress(g, cell_x, cell_y, unit, address);
         }
+
+        const value = this.memory.getUint8(address);
+        this.renderValue(g, cell_x, cell_y, unit, value);
       }
     }
   }
 
   address(row, cell, cells_per_row) {
-    const start_address = 0xffff0000 + this.num_bytes - 1;
+    const start_address = this.num_bytes - 1;
     const row_address = start_address - row * cells_per_row;
     const col_address = -cell;
     return row_address + col_address;
@@ -63,6 +68,11 @@ class MemoryView {
   renderAddress(g, cell_x, cell_y, unit, address) {
     g.text(cell_x + unit, cell_y - unit / 4, fmtAddress(address))
       .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'end' });
+  }
+
+  renderValue(g, cell_x, cell_y, unit, value) {
+    g.text(cell_x + unit / 2, cell_y + unit / 2, fmtAddress(value, 2))
+      .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000", 'text-anchor': 'middle' });
   }
 
   renderMarker(g, x, y) {
