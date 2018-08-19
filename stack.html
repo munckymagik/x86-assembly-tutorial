@@ -8,29 +8,27 @@
   <script src="scripts/raphael.min.js.gz"></script>
   <script>
     class Memory {
-      constructor(g, x, y, num_bytes) {
-        this.g = g;
+      constructor(x, y, num_bytes) {
         this.x = x;
         this.y = y;
         this.num_bytes = num_bytes;
       }
 
-      renderMarker(x, y) {
-        this.g.path(`M${x},${y} l-10,10 l20,0 l-10,-10`).attr({ fill: 'black' });
-        this.g.text(x, y + 20, "ebp")
+      renderMarker(g, x, y) {
+        g.path(`M${x},${y} l-10,10 l20,0 l-10,-10`).attr({ fill: 'black' });
+        g.text(x, y + 20, "ebp")
           .attr({ font: '11px "Helvetica Neue", Arial', fill: "#000" });
       }
 
-      render() {
+      render(g) {
         const start_address = 0xffff0000
-        const g = this.g;
         const unit = 40;
         const cells_per_row = 16;
         const row_w = cells_per_row * unit;
         const row_h = unit;
         const row_space = row_h + unit * 2;
 
-        this.renderMarker(this.x, this.y + row_h);
+        this.renderMarker(g, this.x, this.y + row_h);
 
         for (let row = 0; row * cells_per_row < this.num_bytes; row++) {
           const row_x = this.x;
@@ -68,8 +66,8 @@
       let r = Raphael("holder", 800, 600);
       r.rect(1, 1, 798, 598);
 
-      let mem = new Memory(r, 40, 40, 64);
-      mem.render();
+      let mem = new Memory(40, 40, 64);
+      mem.render(r);
     })
   </script>
 </head>
