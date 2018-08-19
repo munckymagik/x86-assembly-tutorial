@@ -11,14 +11,19 @@
     import { MemoryView } from './scripts/MemoryView.js';
 
     let r = Raphael("holder", 800, 600);
-    r.rect(1, 1, 798, 598);
 
     let mem = new MemoryView(40, 40, 64);
     mem.render(r);
   </script>
+
+  <style>
+    #holder svg {
+      outline: 1px solid black;
+    }
+  </style>
 </head>
 <body>
   <h1>Stack animation</h1>
-  <div id="holder" style="border: 1px solid black"></div>
+  <div id="holder"></div>
 </body>
 </html>
