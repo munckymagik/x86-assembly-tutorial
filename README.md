@@ -253,7 +253,7 @@ We now have three arguments in addition to the program path so we correctly see 
 
 ### Explanation
 
-Let's break down the body of our new `main` function  line-by-line.
+Let's break down the body of our new `main` function line-by-line.
 
 ```s
   # Set up the stack
@@ -261,15 +261,19 @@ Let's break down the body of our new `main` function  line-by-line.
   movl %esp, %ebp
 ```
 
-These two lines are very important and are one half of the missing _stack management discipline_ alluded to in chapter 1. We omitted them deliberately to keep our program as small as possible. They need to appear together at the beginning of all of our functions from now on.
+These two lines are very important. They are one half of the missing _stack management discipline_ alluded to in chapter 1, where we omitted them intentionally to keep our program as small as possible. From now on they will appear together at the beginning of all of our functions.
 
-Their important role is to set aside an area of what is known as _stack_ memory for our function to store any local variables it might need while it is executing. This dedicated area of memory is referred to as a _stack frame_.
+The important role they play is to set aside an area of what is known as _stack_ memory, where our function can store any local variables it might need while it is executing. The word _stack_ here refers to the classic data structure where you _push_ and _pop_ values on and off the top of a collection, and only ever operate on whichever value is currently at the top.
 
-Each function in a program has its own _stack frame_. Because functions can call other functions in a kind of chain, there may be many _stack frames_ on the _stack_ at any one time.
+ > TODO insert diagram of the stack here, showing frames and the current function at the top
 
-The word _stack_ here refers to the data structure where you _push_ and _pop_ values on and off the top. You only ever operate on the value on the top of the stack.
+This area of memory dedicated to our function, within the _stack_, is referred to as a _stack frame_. Each function in a program has its own _stack frame_. Because functions can call other functions in a kind of chain, there may be many _stack frames_ on the _stack_ at any one time.
 
-The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a _stack_ is not just a software issue, but an idea actually baked into the CPU hardware architecture.
+> TODO maybe a diagram of the registers holding addresses of RAM locations
+
+The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a _stack_ is not just a software mechanism, but an idea actually baked into the CPU hardware architecture.
+
+> TODO a diagram showing the BP, SP and the regions either side
 
 BP holds the memory address relative to which our function will look up stack data it has access to. We will see an example of this shortly.
 
@@ -285,11 +289,17 @@ pushl %ebp
 
 This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp`, so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
 
+> TODO diagram showing before and after pushl %ebp
+
 ```s
   movl %esp, %ebp
 ```
 
 This line copies the address stored in SP to BP, which effectively updates the base pointer to refer to the top of the stack. Having done this our function can now safely push any local data it might need.
+
+> TODO diagram showing before and after movl %esp, %ebp
+
+Moving on to the actual body of our function:
 
 ```s
   # Load the value of argc into eax
@@ -300,15 +310,27 @@ There is some new syntax here. Putting parentheses around `%ebp` accesses the va
 
 TODO explain stack address direction.
 
+> TODO diagram showing the argument, the BP and the data we are stepping over to get to the argument
+
 The thing to remember is:
 * Positive offsets reach back towards function arguments and
 * Negative offsets reach forward to local variables.
+
+> TODO diagram to reinforce this
+
+Now we reach the other half of the _stack management discipline_ - reseting the stack and returning:
 
 ```s
   # Return to calling code
   popl %ebp
   retl
 ```
+
+Because we did not allocate any local variables, the value at the top of the stack is the old address of the BP. We use `popl` to load it back into `%ebp` and increment `%esp` (remember addresses going up in value goes down the stack).
+
+Lastly, we use `retl` to return control to calling code. Given our new awareness of the stack, we can explain in more detail what this is doing. Having popped the old value of BP off the stack, the data at the top is now the address of the next instruction to execute in calling code, after it called into ours. What `ret` does is pop that address off of the stack and into the _instruction pointer_ register (IP).
+
+> TODO final diagram showing we have returned and our now unallocated stack frame for main
 
 ---
 
