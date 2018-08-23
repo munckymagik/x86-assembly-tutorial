@@ -1,4 +1,4 @@
-# Basic x86 Assembly Lanugage Tutorial
+# Basic x86 Assembly Language Tutorial
 
 TODO write a motivation.
 
