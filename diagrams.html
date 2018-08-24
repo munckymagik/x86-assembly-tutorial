@@ -13,46 +13,94 @@
     paper.setup(canvas);
 
     const origin = new Point(0, 0);
-    const box = new Path.Rectangle(origin, [100, 100])
-      .set({
-        strokeColor: 'pink'
-      })
-      .sendToBack();
-    box.fitBounds(view.bounds);
+    // const box = new Path.Rectangle(origin, [100, 100])
+    //   .set({
+    //     strokeColor: 'pink'
+    //   })
+    //   .sendToBack();
+    // box.fitBounds(view.bounds);
 
-    const unit = 100;
+    const unit = 50;
 
-    const drawTheStack = () => {
+    const newStack = () => {
       return new Path.Rectangle({
-        size: [unit * 2, unit * 4],
+        size: [unit * 1.5 + 2, unit * 4 + 2],
         strokeColor: '#c0c0c0',
         dashArray: [10, 4]
       });
     }
 
-    const theStack = drawTheStack();
-    theStack.position = view.bounds.center;
-    theStack.sendToBack();
-
-    const stackFrameDef = new SymbolDefinition((() => {
+    const newStackFrame = (label) => {
       const frame = new Path.Rectangle({
-        size: [unit * 2, unit / 2],
+        size: [unit * 1.5, unit / 2],
         strokeColor: 'black',
         strokeWidth: 2,
         fillColor: 'white'
       });
 
       const text = new PointText({
-        content: 'main()'
+        content: label,
       });
       text.position = frame.bounds.center;
 
       return new Group(frame, text);
-    })());
+    };
 
-    const f0 = stackFrameDef.place();
-    f0.bounds.bottomLeft = theStack.bounds.bottomLeft;
+    const drawStack = (fNames, position) => {
+      const theStack = newStack();
+      theStack.position = position;
+      theStack.sendToBack();
 
+      for (let i = 0; i < fNames.length; ++i) {
+        const frame = newStackFrame(fNames[i]);
+        frame.bounds.bottomCenter = theStack.bounds.bottomCenter.subtract([0, i * frame.bounds.height]);
+      }
+    };
+
+    const names = [
+      'main',
+      'run',
+      'buildScene',
+      'addSprite',
+      'setSize',
+      'setColor',
+      'calcRgb',
+      'mult',
+    ];
+
+
+    drawStack(['main'], view.bounds.center.add([-400, 0]));
+    drawStack(['main', 'init'], view.bounds.center.add([-300, 0]));
+    drawStack(['main', 'init', 'buildScene'], view.bounds.center.add([-200, 0]));
+    drawStack(['main', 'init', 'buildScene', 'addSprites'], view.bounds.center.add([-100, 0]));
+    drawStack(['main', 'init', 'buildScene'], view.bounds.center);
+    drawStack(['main', 'loop'], view.bounds.center.add([100, 0]));
+    drawStack(['main', 'loop', 'update'], view.bounds.center.add([200, 0]));
+    drawStack(['main', 'loop'], view.bounds.center.add([300, 0]));
+    drawStack(['main', 'loop', 'draw'], view.bounds.center.add([400, 0]));
+
+    const xAxisStart = view.bounds.center.add([-475, (3 * unit)]);
+    const xAxisEnd = view.bounds.center.add([475, (3 * unit)]);
+    const xAxis = new Path({
+      segments: [
+        xAxisStart,
+        xAxisEnd
+      ],
+      strokeColor: 'black'
+    });
+    const arrow = new Path({
+      segments: [
+        xAxisEnd.add([-10, 10]),
+        xAxisEnd,
+        xAxisEnd.add([-10, -10]),
+      ],
+      strokeColor: 'black'
+    });
+
+    const xAxisLabel = new PointText({
+      content: 'Time',
+    });
+    xAxisLabel.position = xAxis.bounds.center.add([0, 12]);
 
     view.onResize = function(event) {
       box.fitBounds(view.bounds);
