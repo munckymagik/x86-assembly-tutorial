@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Stack animation</title>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
+  <script type="module">
+    const canvas = document.getElementById('myCanvas');
+    paper.setup(canvas);
+
+    const Path = paper.Path
+        , Point = paper.Point
+        , Rect = paper.Rect
+        , view = paper.view
+
+    // const dimension = 800;
+    // const scale = (view.size.width > view.size.height)
+    //   ? view.size.height / dimension
+    //   : view.size.width / dimension;
+
+    var rect = new Path.Rectangle({
+      point: [0, 0],
+      size: [view.size.width, view.size.height],
+      strokeColor: 'black',
+      selected: true
+    });
+    rect.sendToBack();
+
+    view.draw();
+
+    view.onResize = function(event) {
+      console.log("in here", view.center);
+      // Whenever the window is resized, recenter the path:
+      rect.size = [view.size.width, view.size.height];
+      // view.draw();
+    }
+
+  </script>
+  <style>
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    /* Scale canvas with resize attribute to full size */
+    canvas[data-paper-resize] {
+        width: 100%;
+        height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas" data-paper-resize="true"></canvas>
+</body>
+</html>

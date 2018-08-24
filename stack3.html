@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Stack animation</title>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/two.js/0.6.0/two.min.js"></script>
+  <script type="module">
+    const two = window.two = new Two({ fullscreen: true }).appendTo(document.body);
+
+    const names = [
+      'main',
+      'run',
+      'buildScene',
+      'addSprite',
+      'setSize',
+      'setColor',
+      'calcRgb',
+      'mult',
+    ]
+
+    const stackFrames = [];
+
+    const offset = 50;
+    const height = 25;
+    const x = two.width / 2;
+
+    const stack = two.makeRectangle(x, offset + 4*height, 150, height * 10);
+    stack.strokeColor = 'black';
+    stack.noFill();
+
+    for (let i = 0; i < 8; i++) {
+      const g = two.makeGroup()
+
+      const y = offset + i * height;
+
+      const frame = two.makeRectangle(x, y, 150, height);
+      frame.fill = 'lightgrey';
+      frame.stoke = 'grey';
+      g.add(frame);
+
+      const text = new Two.Text(`${names[i]}()`, x, y, { visble: false });
+      g.add(text);
+
+      g.visible = false;
+      stackFrames.push(g);
+    }
+
+    stackFrames[0].visible = true;
+    let next = 1;
+    let direction = 1;
+
+    two.bind('update', function (frameCount) {
+      if (frameCount % 30 == 0) {
+        if (Math.random() > 0.5) direction = -direction;
+        if (next == 7) direction = -1;
+        if (next == 0) direction = +1;
+
+        next += direction;
+
+        for (let i = 0; i < stackFrames.length; ++i) {
+          stackFrames[i].visible = i <= next;
+        }
+
+        console.log(next);
+      }
+    }).play();
+  </script>
+  <style>
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+  </style>
+</head>
+<body>
+</body>
+</html>
