@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Stack animation</title>
+  <title>Paper.js Test Card</title>
 
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
   <script type="module">
@@ -27,19 +27,27 @@
         segments: [pos.subtract([0, dim]), pos.add([0, dim])],
         strokeColor: color
       });
+
+      return new Group(circle, horiz, vert);
     };
 
-    crosshair(origin, 'red');
-    crosshair(view.bounds.center, 'green');
-    crosshair(view.bounds.bottomRight, 'blue');
+    const origCross = crosshair(origin, 'red');
+    const centerCross = crosshair(view.bounds.center, 'green');
+    const bottomRightCross = crosshair(view.bounds.bottomRight, 'blue');
 
-    // view.draw();
+    const box = new Path.Rectangle(origin, [100, 100])
+      .set({
+        strokeColor: 'pink'
+      })
+      .sendToBack();
+    box.fitBounds(view.bounds);
 
     view.onResize = function(event) {
-      console.log("view resized", view.center);
-      // view.draw();
+      console.log("view resized", view.bounds);
+      centerCross.position = view.bounds.center;
+      bottomRightCross.position = view.bounds.bottomRight;
+      box.fitBounds(view.bounds);
     }
-
   </script>
   <style>
     html,
