@@ -265,15 +265,15 @@ These two lines are very important. They are one half of the missing _stack mana
 
 The important role they play is to set aside an area of what is known as _stack_ memory, where our function can store any local variables it might need while it is executing. The word _stack_ here refers to the classic data structure where you _push_ and _pop_ values on and off the top of a collection, and only ever operate on whichever value is currently at the top.
 
- > TODO insert diagram of the stack here, showing frames and the current function at the top
+![The stack](images/stack01.jpg)
 
 This area of memory dedicated to our function, within the _stack_, is referred to as a _stack frame_. Each function in a program has its own _stack frame_. Because functions can call other functions in a kind of chain, there may be many _stack frames_ on the _stack_ at any one time.
 
-> TODO maybe a diagram of the registers holding addresses of RAM locations
+![The stack](images/stack03.jpg)
+
+> TODO ^^^ the addresses are the wrong way around
 
 The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a _stack_ is not just a software mechanism, but an idea actually baked into the CPU hardware architecture.
-
-> TODO a diagram showing the BP, SP and the regions either side
 
 BP holds the memory address relative to which our function will look up stack data it has access to. We will see an example of this shortly.
 
@@ -289,15 +289,11 @@ pushl %ebp
 
 This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp`, so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
 
-> TODO diagram showing before and after pushl %ebp
-
 ```s
   movl %esp, %ebp
 ```
 
 This line copies the address stored in SP to BP, which effectively updates the base pointer to refer to the top of the stack. Having done this our function can now safely push any local data it might need.
-
-> TODO diagram showing before and after movl %esp, %ebp
 
 Moving on to the actual body of our function:
 
@@ -308,15 +304,12 @@ Moving on to the actual body of our function:
 
 There is some new syntax here. Putting parentheses around `%ebp` accesses the value stored at the address held in BP. Prefixing with `8` offsets the address in BP by `+8`. So we are looking up a value in the stack relative to the base pointer.
 
-TODO explain stack address direction.
+![The stack](images/stack04.jpg)
 
-> TODO diagram showing the argument, the BP and the data we are stepping over to get to the argument
+You might notice something a little weird here: we are calculating a higher memory address to reach backwards in the stack to where calling code placed our function arguments. This is because stack grow downwards, not upwards as would be our intuition. This is just the way a processes memory is organised. Most of the time this does not matter, you can just visualise the stack growing up and shrinking down. The thing to remember is:
 
-The thing to remember is:
 * Positive offsets reach back towards function arguments and
 * Negative offsets reach forward to local variables.
-
-> TODO diagram to reinforce this
 
 Now we reach the other half of the _stack management discipline_ - reseting the stack and returning:
 
