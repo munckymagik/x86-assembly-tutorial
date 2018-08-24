@@ -8,33 +8,35 @@
 
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
   <script type="module">
+    paper.install(window);
     const canvas = document.getElementById('myCanvas');
     paper.setup(canvas);
 
-    const Path = paper.Path
-        , Point = paper.Point
-        , Rect = paper.Rect
-        , view = paper.view
+    const origin = new Point(0, 0);
 
-    // const dimension = 800;
-    // const scale = (view.size.width > view.size.height)
-    //   ? view.size.height / dimension
-    //   : view.size.width / dimension;
+    const crosshair = (pos, color) => {
+      const dim = 50;
+      const circle = new Path.Circle(pos, dim * 0.75);
+      circle.strokeColor = color;
 
-    var rect = new Path.Rectangle({
-      point: [0, 0],
-      size: [view.size.width, view.size.height],
-      strokeColor: 'black',
-      selected: true
-    });
-    rect.sendToBack();
+      const horiz = new Path({
+        segments: [pos.subtract([dim, 0]), pos.add([dim, 0])],
+        strokeColor: color
+      });
+      const vert = new Path({
+        segments: [pos.subtract([0, dim]), pos.add([0, dim])],
+        strokeColor: color
+      });
+    };
 
-    view.draw();
+    crosshair(origin, 'red');
+    crosshair(view.bounds.center, 'green');
+    crosshair(view.bounds.bottomRight, 'blue');
+
+    // view.draw();
 
     view.onResize = function(event) {
-      console.log("in here", view.center);
-      // Whenever the window is resized, recenter the path:
-      rect.size = [view.size.width, view.size.height];
+      console.log("view resized", view.center);
       // view.draw();
     }
 
