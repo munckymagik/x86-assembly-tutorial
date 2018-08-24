@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Diagrams</title>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js"></script>
+  <script type="module">
+    paper.install(window);
+    const canvas = document.getElementById('myCanvas');
+    paper.setup(canvas);
+
+    const origin = new Point(0, 0);
+    const box = new Path.Rectangle(origin, [100, 100])
+      .set({
+        strokeColor: 'pink'
+      })
+      .sendToBack();
+    box.fitBounds(view.bounds);
+
+    const unit = 100;
+
+    const drawTheStack = () => {
+      return new Path.Rectangle({
+        size: [unit * 2, unit * 4],
+        strokeColor: '#c0c0c0',
+        dashArray: [10, 4]
+      });
+    }
+
+    const theStack = drawTheStack();
+    theStack.position = view.bounds.center;
+    theStack.sendToBack();
+
+    const stackFrameDef = new SymbolDefinition((() => {
+      const frame = new Path.Rectangle({
+        size: [unit * 2, unit / 2],
+        strokeColor: 'black',
+        strokeWidth: 2,
+        fillColor: 'white'
+      });
+
+      const text = new PointText({
+        content: 'main()'
+      });
+      text.position = frame.bounds.center;
+
+      return new Group(frame, text);
+    })());
+
+    const f0 = stackFrameDef.place();
+    f0.bounds.bottomLeft = theStack.bounds.bottomLeft;
+
+
+    view.onResize = function(event) {
+      box.fitBounds(view.bounds);
+    }
+  </script>
+  <style>
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    /* Scale canvas with resize attribute to full size */
+    canvas[data-paper-resize] {
+        width: 100%;
+        height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas" data-paper-resize="true"></canvas>
+</body>
+</html>
