@@ -191,8 +191,6 @@ $ objdump -S /bin/false > false.s
 
 ## Chapter 2: Receiving input from the command line
 
-⚠️ WIP
-
 In this chapter we are going to build the equivalent of the following C program:
 
 ```c
@@ -271,7 +269,7 @@ This area of memory dedicated to our function, within the _stack_, is referred t
 
 ![The stack](images/stack03.jpg)
 
-> TODO ^^^ the addresses are the wrong way around
+> ⚠️ TODO ^^^ the addresses are the wrong way around, SP will always be <= BP
 
 The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a _stack_ is not just a software mechanism, but an idea actually baked into the CPU hardware architecture.
 
@@ -306,10 +304,15 @@ There is some new syntax here. Putting parentheses around `%ebp` accesses the va
 
 ![The stack](images/stack04.jpg)
 
-You might notice something a little weird here: we are calculating a higher memory address to reach backwards in the stack to where calling code placed our function arguments. This is because stack grow downwards, not upwards as would be our intuition. This is just the way a processes memory is organised. Most of the time this does not matter, you can just visualise the stack growing up and shrinking down. The thing to remember is:
+You might notice something a little weird here: we are calculating a higher memory address to reach backwards in the stack to where calling code placed our function parameters. This is because stack grow downwards, not upwards as would be our intuition. This is just the way a processes memory is organised. Most of the time this does not matter, you can just visualise the stack growing up and shrinking down. The thing to remember is:
 
 * Positive offsets reach back towards function arguments and
-* Negative offsets reach forward to local variables.
+* Negative offsets reach forward to local variables
+
+The reason we offset by `8` from the BP, is that inbetween the function parameter and BP there are two values:
+
+* The return address - the address of the next instruction in calling code after it called our function (labelled `ret addr` in the diagram above)
+* The previous address of BP - we saved this when we called `pushl %ebp` at beginning of our function
 
 Now we reach the other half of the _stack management discipline_ - reseting the stack and returning:
 
@@ -319,9 +322,9 @@ Now we reach the other half of the _stack management discipline_ - reseting the 
   retl
 ```
 
-Because we did not allocate any local variables, the value at the top of the stack is the old address of the BP. We use `popl` to load it back into `%ebp` and increment `%esp` (remember addresses going up in value goes down the stack).
+Because we did not allocate any local variables, the value at the top of the stack is the previous address of the BP. We use `popl` to load it back into `%ebp` and increment `%esp` (remember addresses going up in value go down the stack).
 
-Lastly, we use `retl` to return control to calling code. Given our new awareness of the stack, we can explain in more detail what this is doing. Having popped the old value of BP off the stack, the data at the top is now the address of the next instruction to execute in calling code, after it called into ours. What `ret` does is pop that address off of the stack and into the _instruction pointer_ register (IP).
+Lastly, we use `retl` to return control to calling code. Given our new awareness of the stack, we can explain in more detail what this is doing. Having popped the previous value of BP off the stack, the data at the top is now the return address. What `ret` does is pop that address off of the stack and load it into the _instruction pointer_ register (IP).
 
 > TODO final diagram showing we have returned and our now unallocated stack frame for main
 
@@ -329,18 +332,17 @@ Lastly, we use `retl` to return control to calling code. Given our new awareness
 
 ### Key points
 
-Here we are again, we have a small example and yet there are loads of interesting facts we learned.
+Here we are again. We have a small example and yet there are loads of interesting facts learned.
 
-* TODO passing args to main
-* TODO the stack is a thing
-* TODO there is a base pointer
-* TODO there is a stack pointer
-* TODO setting up the stack
-* TODO safely returning to calling code
-* TODO addressing values relative our base pointer
-* TODO parameters will have positive offsets, locals will have negative
-* TODO to get the first parameter we have to offset over the saved base pointer and the return instruction pointer
-* TODO To return we now need to restore the base-pointer
+* Arguments from the command-line are passed to `main` as function parameters (`argc` and `argv` in C)
+* The stack is a per-process area of main memory used to maintain local state in functions
+* We maintain the stack using the base-pointer (BP) and stack-pointer (SP) registers
+* When we enter a new function we set up a new stack frame by storing the previous value of BP then pointing it to the top of the stack
+* We address values in the stack relative to the base-pointer (BP)
+* Stack memory is arranged such that the bottom is at a high address and it grows towards lower addresses.
+* Addresses of function parameters will have positive offsets and local variables will have negative offsets
+* To address the first function parameter we have to offset by 8 to skip over the saved base-pointer and return instruction-pointer
+* Before a function can return, the stack must be restored to the state it was in when the function was called
 
 ---
 
