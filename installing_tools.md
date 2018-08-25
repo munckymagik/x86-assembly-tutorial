@@ -1,4 +1,4 @@
-## Installing the required tools
+# Installing the required tools
 
 Basically you need the `gcc` compiler (or an equivalent like `clang` with it's `gcc` frontend`).
 

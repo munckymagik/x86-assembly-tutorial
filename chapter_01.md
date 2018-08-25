@@ -1,4 +1,4 @@
-## Chapter 1: The smallest assembly language program we can get away with
+# Chapter 1: The smallest assembly language program we can get away with
 
 Below is the smallest program we can write in assembly language. The heading says "get away with" because in order to be so small we are ommitting an important discipline required for writing reliable assembly language code - managing the stack - but this doesn't matter for now. We'll explain more on this later.
 
@@ -34,7 +34,7 @@ Exit status was: 0
 
 And with that, you've made your first program in assembly language. Not quite "Hello world", but we'll get there later.
 
-### Explanation
+## Explanation
 
 Let's examine this program line by line:
 
@@ -96,7 +96,7 @@ Exit status was: 17
 
 ---
 
-### Key points
+## Key points
 
 We have already covered a lot of points in this first small example.
 
@@ -115,9 +115,9 @@ Then considering executable instructions:
 
 ---
 
-### Exercises
+## Exercises
 
-#### 1) An equivalent C program
+### 1) An equivalent C program
 
 Given this C program roughly equivalent to our example:
 
@@ -138,7 +138,7 @@ Open `main.s` in your editor.
 * What differences do you notice between this and our simple program?
 * What changes in the output if you make the return value `17` instead of `0`?
 
-#### 2) Disassembling true and false
+### 2) Disassembling true and false
 
 Two of the most basic Unix system tools are the `true` and `false` commands. One returns an exit status of `0` and the other returns `1`.
 

@@ -1,4 +1,4 @@
-## Chapter 2: Receiving input from the command line
+# Chapter 2: Receiving input from the command line
 
 In this chapter we are going to build the equivalent of the following C program:
 
@@ -58,7 +58,7 @@ The number of arguments was: 4
 
 We now have three arguments in addition to the program path so we correctly see the number `4` as our exit status.
 
-### Explanation
+## Explanation
 
 Let's break down the body of our new `main` function line-by-line.
 
@@ -139,7 +139,7 @@ Lastly, we use `retl` to return control to calling code. Given our new awareness
 
 ---
 
-### Key points
+## Key points
 
 Here we are again. We have a small example and yet there are loads of interesting facts learned.
 
@@ -155,9 +155,9 @@ Here we are again. We have a small example and yet there are loads of interestin
 
 ---
 
-### Exercises
+## Exercises
 
-#### 1) Don't count the program path
+### 1) Don't count the program path
 
 Update the example code to deduct 1 from the count in `argc`, so we only see the number of actual arguments we passed on the command line.
 
