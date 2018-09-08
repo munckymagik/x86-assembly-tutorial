@@ -1,22 +1,21 @@
 # Basic x86 Assembly Language Tutorial
 
-> TODO write an introduction and motivation.
+## Prerequisites
 
-## Intro notes
+1) Install Rust, see https://rustup.rs/.
 
-* Will use Gnu AS (GAS) "like" assembler. The LLVM assembler on Mac OS X can be used as it has the same interface, similarly the MinGW assembler on Windows as I believe it is derived from GAS.
-* We will use AT&T syntax rather than Intel, as this is the format compilers and disassemblers seem to output by default according to my limited experience so far.
+2) Install [mdbook](https://rust-lang-nursery.github.io/mdBook/) with `cargo install mdbook`
 
-## [Installing the required tools](./installing_tools.md)
+## Building
 
-## [Chapter 1: The smallest assembly language program we can get away with](./chapter_01.md)
+Outputs to `./book`.
 
-## [Chapter 2: Receiving input from the command line](./chapter_02.md)
+```
+mdbook build
+```
 
-## Chapter X: Printing text output to the terminal
+Or build, serve and watch the files for changes
 
-## Chapter X: Calling a function
-
-## Chapter X: Deciding what to do
-
-## Chapter X: Looping and repeating
+```
+mdbook serve --open
+```

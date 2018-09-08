@@ -1,0 +1,5 @@
+[book]
+authors = ["Dan Munckton"]
+multilingual = false
+src = "src"
+title = "Basic x86 Assembly Language Tutorial"
