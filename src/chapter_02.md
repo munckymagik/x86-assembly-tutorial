@@ -14,7 +14,7 @@ In this example, we continue abusing the exit status value as a way to get outpu
 
 Here is the assembly language version:
 
-```s
+```x86att
 .text
 
 .globl _main
@@ -62,7 +62,7 @@ We now have three arguments in addition to the program path so we correctly see 
 
 Let's break down the body of our new `main` function line-by-line.
 
-```s
+```x86att
   # Set up the stack
   pushl %ebp
   movl %esp, %ebp
@@ -90,13 +90,13 @@ The area of memory between the addresses in SP and BP contains all stack data lo
 
 So what do these two lines actually do?
 
-```s
+```x86att
 pushl %ebp
 ```
 
 This line saves the address of the calling function's base pointer so it can be restored later when we return. `pushl` copies the current value of `%ebp` onto the top of the stack, then updates the address in `%esp` by the size of `%ebp`, so it continues to point to the top of the stack. Because we are in 32-bit mode the size of `%ebp` will be 4 bytes and so `%esp` will be changed by 4.
 
-```s
+```x86att
   movl %esp, %ebp
 ```
 
@@ -104,7 +104,7 @@ This line copies the address stored in SP to BP, which effectively updates the b
 
 Moving on to the actual body of our function:
 
-```s
+```x86att
   # Load the value of argc into eax
   movl 8(%ebp), %eax
 ```
@@ -125,7 +125,7 @@ The reason we offset by `8` from the BP, is that inbetween the function paramete
 
 Now we reach the other half of the _stack management discipline_ - reseting the stack and returning:
 
-```s
+```x86att
   # Return to calling code
   popl %ebp
   retl

@@ -1,22 +1,31 @@
 # Basic x86 Assembly Language Tutorial
 
-> TODO write an introduction and motivation.
+The tutorial is hosted in GitHub Pages here:
 
-## Intro notes
+https://munckymagik.github.io/x86-assembly-tutorial/
 
-* Will use Gnu AS (GAS) "like" assembler. The LLVM assembler on Mac OS X can be used as it has the same interface, similarly the MinGW assembler on Windows as I believe it is derived from GAS.
-* We will use AT&T syntax rather than Intel, as this is the format compilers and disassemblers seem to output by default according to my limited experience so far.
+## Authoring
 
-## [Installing the required tools](./installing_tools.md)
+### Prerequisites
 
-## [Chapter 1: The smallest assembly language program we can get away with](./chapter_01.md)
+1) Install Rust, see https://rustup.rs/.
 
-## [Chapter 2: Receiving input from the command line](./chapter_02.md)
+2) Install [mdbook](https://rust-lang-nursery.github.io/mdBook/) with `cargo install mdbook`
 
-## Chapter X: Printing text output to the terminal
+### Building
 
-## Chapter X: Calling a function
+Outputs to `./book`.
 
-## Chapter X: Deciding what to do
+```
+mdbook build
+```
 
-## Chapter X: Looping and repeating
+Or build, serve and watch the files for changes
+
+```
+mdbook serve --open
+```
+
+## Publishing
+
+This is done automatically using TravisCI when pushing to `master`. See `.travis.yml`.

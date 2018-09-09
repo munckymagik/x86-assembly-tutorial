@@ -2,7 +2,7 @@
 
 Below is the smallest program we can write in assembly language. The heading says "get away with" because in order to be so small we are ommitting an important discipline required for writing reliable assembly language code - managing the stack - but this doesn't matter for now. We'll explain more on this later.
 
-```s
+```x86att
 .text
 .globl	_main
 _main:
@@ -38,19 +38,19 @@ And with that, you've made your first program in assembly language. Not quite "H
 
 Let's examine this program line by line:
 
-```s
+```x86att
 .text
 ```
 
 This is a directive that declares the start of a section of program code. Executable program code is always placed into a `text` section. Other sections will be introduced later when we store data.
 
-```s
+```x86att
 .globl	_main
 ```
 
 This uses another directive and is the first part of declaring our `main` function. `main` is the _entry-point_ to our program. The `globl` directive makes the `_main` symbol visible outside of our code, which is generally referred to as _exporting_. This is necessary so that system code knows where to begin executing our program.
 
-```s
+```x86att
 _main:
 ```
 
@@ -58,7 +58,7 @@ This declares the label `_main`. This is the symbol that was previously made vis
 
 At this point we have defined the empty shell of a program and the start of a function. Next we implement the body of our main function with an actual assembly language instruction:
 
-```s
+```x86att
 movl $0, %eax
 ```
 
@@ -68,7 +68,7 @@ We are working in 32-bit mode so the `mov` instruction is suffixed with an `l` f
 
 Similarly, because we are using a 32-bit instruction we also need to access the AX register as a 32-bit value. We do this by prepending the register name with an `e`, thus `eax`.
 
-```s
+```x86att
 retl
 ```
 
@@ -76,7 +76,7 @@ Finally, `ret` returns control to the system-code which called our `main` functi
 
 If we want to set a different exit status we can change the value loaded into AX.
 
-```s
+```x86att
 .text
 .globl _main
 _main:
