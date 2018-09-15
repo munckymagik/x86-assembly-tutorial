@@ -29,6 +29,9 @@ cbins: $(C_BINS)
 .PHONY: casm
 casm: $(C_ASM)
 
+.PHONY: x86
+x86: $(X86_BINS)
+
 .PHONY: info
 info:
 	@echo X86_SRCS: $(X86_SRCS)
