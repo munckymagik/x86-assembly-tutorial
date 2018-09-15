@@ -2,7 +2,7 @@
 
 .text
 
-.globl _main
+.globl CSYM(main)
 CSYM(main):
   # Set up the stack
   pushl %ebp
