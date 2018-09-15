@@ -16,10 +16,9 @@ endif
 C_SRCS := $(wildcard *.c)
 C_ASM  := $(patsubst %.c,%.s,$(C_SRCS))
 C_BINS := $(patsubst %.c,%.out,$(C_SRCS))
-X86_SRCS := $(wildcard *_x86.s)
-X86_BINS := $(patsubst %.s,%.out,$(X86_SRCS))
+X86_SRCS := $(wildcard *_x86.[Ss])
+X86_BINS := $(patsubst %.s,%.out,$(X86_SRCS:.S=.s))
 BINS := $(C_BINS) $(X86_BINS)
-
 
 .PHONY: all
 all: $(BINS)
@@ -46,6 +45,12 @@ clean:
 	rm -rf *.out *.dSYM $(C_ASM)
 
 $(BINS): Makefile
+
+.PRECIOUS: %.s
+
+%.s: %.S
+	@echo "I am happening"
+	$(CC) -E $(<) -o $(@)
 
 %.s: %.c
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
