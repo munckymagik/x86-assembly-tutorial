@@ -20,11 +20,11 @@ BINS := $(C_BINS) $(X86_BINS)
 .PHONY: all
 all: $(BINS)
 
-.PHONY: c_bins
-c_bins: $(C_BINS)
+.PHONY: cbins
+cbins: $(C_BINS)
 
-.PHONY: c_asm
-c_asm: $(C_ASM)
+.PHONY: casm
+casm: $(C_ASM)
 
 .PHONY: info
 info:
