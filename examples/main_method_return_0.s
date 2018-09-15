@@ -1,9 +1,7 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.macosx_version_min 10, 12
+	.text
 	.globl	_main
 	.p2align	4, 0x90
-_main:                                  ## @main
-## BB#0:
+_main:
 	pushl	%ebp
 	movl	%esp, %ebp
 	pushl	%eax
@@ -13,5 +11,3 @@ _main:                                  ## @main
 	popl	%ebp
 	retl
 
-
-.subsections_via_symbols
