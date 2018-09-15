@@ -1,6 +1,5 @@
 	.text
 	.globl	_main
-	.p2align	4, 0x90
 _main:
 	pushl	%ebp
 	movl	%esp, %ebp
