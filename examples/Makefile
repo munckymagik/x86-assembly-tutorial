@@ -46,14 +46,11 @@ clean:
 
 $(BINS): Makefile
 
-.PRECIOUS: %.s
-
-%.s: %.S
-	@echo "I am happening"
-	$(CC) -E $(<) -o $(@)
-
 %.s: %.c
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
 
 %.out: %.s
+	$(CC) $(CFLAGS) $(LDFLAGS) $(<) -o $(@)
+
+%.out: %.S
 	$(CC) $(CFLAGS) $(LDFLAGS) $(<) -o $(@)
