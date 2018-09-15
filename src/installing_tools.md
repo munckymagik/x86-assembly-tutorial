@@ -12,6 +12,12 @@ On Ubuntu/debian Linux:
 $ apt install build-essential gcc-multilib
 ```
 
+On FreeBSD, it already comes with a compiler, but you will need `gmake` to build the examples in the repository:
+
+```
+$ sudo pkg install gmake
+```
+
 On Windows:
 
 * Install the [MinGW](http://www.mingw.org/) toolset
