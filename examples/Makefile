@@ -1,11 +1,9 @@
-CC := gcc
-CFLAGS  = -std=c99
+CC ?= cc
 # CFLAGS += -g
 CFLAGS += -O1
 CFLAGS += -m32
 CFLAGS += -Wall
 CFLAGS += -Wextra
-CFLAGS += -pedantic
 CFLAGS += -Werror
 # Tell the linker not to use position independent code. Needed to reference string data simply.
 # CFLAGS += -Wl,-no_pie
