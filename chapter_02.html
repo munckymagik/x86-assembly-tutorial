@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Receiving input from the command line - Basic x86 Assembly Language Tutorial</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="intro.html">Introduction</a></li><li class="affix"><a href="installing_tools.html">Installing the required tools</a></li><li><a href="chapter_01.html"><strong aria-hidden="true">1.</strong> The smallest assembly language program we can get away with</a></li><li><a href="chapter_02.html" class="active"><strong aria-hidden="true">2.</strong> Receiving input from the command line</a></li><li><a href="chapter_03.html"><strong aria-hidden="true">3.</strong> Printing text output to the terminal</a></li><li><a href="chapter_04.html"><strong aria-hidden="true">4.</strong> Calling a function</a></li><li><a href="chapter_05.html"><strong aria-hidden="true">5.</strong> Deciding what to do</a></li><li><a href="chapter_06.html"><strong aria-hidden="true">6.</strong> Looping and repeating</a></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Basic x86 Assembly Language Tutorial</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#chapter-2-receiving-input-from-the-command-line" id="chapter-2-receiving-input-from-the-command-line"><h1>Chapter 2: Receiving input from the command line</h1></a>
+<p>In this chapter we are going to build the equivalent of the following C program:</p>
+<pre><code class="language-c">int main(int argc, char *argv[]) {
+    return argc;
+}
+</code></pre>
+<p>Command line arguments are passed to a C or assembly language program via two parameters to the <code>main</code> function. The first parameter <code>argc</code> is an integer which will contain the count of arguments passed on the command line. The second parameter <code>argv</code> is an array containing the command-line argument strings.</p>
+<p>In this example, we continue abusing the exit status value as a way to get output from our programs by returning the count of input arguments <code>argc</code> as the exit code.</p>
+<p>Here is the assembly language version:</p>
+<pre><code class="language-x86att">.text
+
+.globl _main
+_main:
+  # Set up the stack
+  pushl %ebp
+  movl %esp, %ebp
+
+  # Load the value of argc into eax
+  movl 8(%ebp), %eax
+
+  # Return to calling code
+  popl %ebp
+  retl
+</code></pre>
+<p>Save this to a file called <code>cli_input.s</code>, then you can compile it by running:</p>
+<pre><code>$ gcc -m32 cli_input.s -o cli_input.out
+</code></pre>
+<p>Then execute and examine the exit status of the process to see if it worked:</p>
+<pre><code>$ ./cli_input.out; echo &quot;The number of arguments was: $?&quot;
+</code></pre>
+<p>You should see the output:</p>
+<pre><code>The number of arguments was: 1
+</code></pre>
+<p>Eh!? But we haven't passed any arguments!! It turns out there is always one argument in <code>argv</code> even if we haven't passed anything on the command line and that is the file path of the program itself. We will see what this looks like in a later chapter. Let's run it again and pass our own arguments.</p>
+<pre><code>$ ./cli_input.out 1 2 3; echo &quot;The number of arguments was: $?&quot;
+The number of arguments was: 4
+</code></pre>
+<p>We now have three arguments in addition to the program path so we correctly see the number <code>4</code> as our exit status.</p>
+<a class="header" href="#explanation" id="explanation"><h2>Explanation</h2></a>
+<p>Let's break down the body of our new <code>main</code> function line-by-line.</p>
+<pre><code class="language-x86att">  # Set up the stack
+  pushl %ebp
+  movl %esp, %ebp
+</code></pre>
+<p>These two lines are very important. They are one half of the missing <em>stack management discipline</em> alluded to in chapter 1, where we omitted them intentionally to keep our program as small as possible. From now on they will appear together at the beginning of all of our functions.</p>
+<p>The important role they play is to set aside an area of what is known as <em>stack</em> memory, where our function can store any local variables it might need while it is executing. The word <em>stack</em> here refers to the classic data structure where you <em>push</em> and <em>pop</em> values on and off the top of a collection, and only ever operate on whichever value is currently at the top.</p>
+<p><img src="images/stack01.jpg" alt="The stack" /></p>
+<p>This area of memory dedicated to our function, within the <em>stack</em>, is referred to as a <em>stack frame</em>. Each function in a program has its own <em>stack frame</em>. Because functions can call other functions in a kind of chain, there may be many <em>stack frames</em> on the <em>stack</em> at any one time.</p>
+<p><img src="images/stack03.jpg" alt="The stack" /></p>
+<blockquote>
+<p>⚠️ TODO ^^^ the addresses are the wrong way around, SP will always be &lt;= BP</p>
+</blockquote>
+<p>The base-pointer (BP) and the stack-pointer (SP) are two registers dedicated to managing the stack. Their existence shows that the concept of having a <em>stack</em> is not just a software mechanism, but an idea actually baked into the CPU hardware architecture.</p>
+<p>BP holds the memory address relative to which our function will look up stack data it has access to. We will see an example of this shortly.</p>
+<p>SP holds the memory address of the top of the stack. It is used to quickly find the next free memory when we need to push some data onto the stack.</p>
+<p>The area of memory between the addresses in SP and BP contains all stack data local to the currently executing function.</p>
+<p>So what do these two lines actually do?</p>
+<pre><code class="language-x86att">pushl %ebp
+</code></pre>
+<p>This line saves the address of the calling function's base pointer so it can be restored later when we return. <code>pushl</code> copies the current value of <code>%ebp</code> onto the top of the stack, then updates the address in <code>%esp</code> by the size of <code>%ebp</code>, so it continues to point to the top of the stack. Because we are in 32-bit mode the size of <code>%ebp</code> will be 4 bytes and so <code>%esp</code> will be changed by 4.</p>
+<pre><code class="language-x86att">  movl %esp, %ebp
+</code></pre>
+<p>This line copies the address stored in SP to BP, which effectively updates the base pointer to refer to the top of the stack. Having done this our function can now safely push any local data it might need.</p>
+<p>Moving on to the actual body of our function:</p>
+<pre><code class="language-x86att">  # Load the value of argc into eax
+  movl 8(%ebp), %eax
+</code></pre>
+<p>There is some new syntax here. Putting parentheses around <code>%ebp</code> accesses the value stored at the address held in BP. Prefixing with <code>8</code> offsets the address in BP by <code>+8</code>. So we are looking up a value in the stack relative to the base pointer.</p>
+<p><img src="images/stack04.jpg" alt="The stack" /></p>
+<p>You might notice something a little weird here: we are calculating a higher memory address to reach backwards in the stack to where calling code placed our function parameters. This is because stack grow downwards, not upwards as would be our intuition. This is just the way a processes memory is organised. Most of the time this does not matter, you can just visualise the stack growing up and shrinking down. The thing to remember is:</p>
+<ul>
+<li>Positive offsets reach back towards function arguments and</li>
+<li>Negative offsets reach forward to local variables</li>
+</ul>
+<p>The reason we offset by <code>8</code> from the BP, is that inbetween the function parameter and BP there are two values:</p>
+<ul>
+<li>The return address - the address of the next instruction in calling code after it called our function (labelled <code>ret addr</code> in the diagram above)</li>
+<li>The previous address of BP - we saved this when we called <code>pushl %ebp</code> at beginning of our function</li>
+</ul>
+<p>Now we reach the other half of the <em>stack management discipline</em> - reseting the stack and returning:</p>
+<pre><code class="language-x86att">  # Return to calling code
+  popl %ebp
+  retl
+</code></pre>
+<p>Because we did not allocate any local variables, the value at the top of the stack is the previous address of the BP. We use <code>popl</code> to load it back into <code>%ebp</code> and increment <code>%esp</code> (remember addresses going up in value go down the stack).</p>
+<p>Lastly, we use <code>retl</code> to return control to calling code. Given our new awareness of the stack, we can explain in more detail what this is doing. Having popped the previous value of BP off the stack, the data at the top is now the return address. What <code>ret</code> does is pop that address off of the stack and load it into the <em>instruction pointer</em> register (IP).</p>
+<blockquote>
+<p>TODO final diagram showing we have returned and our now unallocated stack frame for main</p>
+</blockquote>
+<hr />
+<a class="header" href="#key-points" id="key-points"><h2>Key points</h2></a>
+<p>Here we are again. We have a small example and yet there are loads of interesting facts learned.</p>
+<ul>
+<li>Arguments from the command-line are passed to <code>main</code> as function parameters (<code>argc</code> and <code>argv</code> in C)</li>
+<li>The stack is a per-process area of main memory used to maintain local state in functions</li>
+<li>We maintain the stack using the base-pointer (BP) and stack-pointer (SP) registers</li>
+<li>When we enter a new function we set up a new stack frame by storing the previous value of BP then pointing it to the top of the stack</li>
+<li>We address values in the stack relative to the base-pointer (BP)</li>
+<li>Stack memory is arranged such that the bottom is at a high address and it grows towards lower addresses.</li>
+<li>Addresses of function parameters will have positive offsets and local variables will have negative offsets</li>
+<li>To address the first function parameter we have to offset by 8 to skip over the saved base-pointer and return instruction-pointer</li>
+<li>Before a function can return, the stack must be restored to the state it was in when the function was called</li>
+</ul>
+<hr />
+<a class="header" href="#exercises" id="exercises"><h2>Exercises</h2></a>
+<a class="header" href="#a1-dont-count-the-program-path" id="a1-dont-count-the-program-path"><h3>1) Don't count the program path</h3></a>
+<p>Update the example code to deduct 1 from the count in <code>argc</code>, so we only see the number of actual arguments we passed on the command line.</p>
+<p>The <code>subl</code> instruction will let you subtract a value from another held in memory.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_03.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="chapter_01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_03.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
