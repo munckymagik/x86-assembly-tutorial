@@ -9,7 +9,7 @@ On Mac OS X:
 On Ubuntu/debian Linux:
 
 ```
-$ apt install build-essential
+$ apt install build-essential gcc-multilib
 ```
 
 On Windows:
