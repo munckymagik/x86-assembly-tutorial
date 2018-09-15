@@ -5,16 +5,20 @@ CFLAGS += -m32
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
-# Tell the linker not to use position independent code. Needed to reference string data simply.
-# CFLAGS += -Wl,-no_pie
+LDFLAGS ?=
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+# Tell the linker not to use position independent code. Needed to reference string data simply.
+LDFLAGS += -Wl,-no_pie
+endif
 
 C_SRCS := $(wildcard *.c)
 C_ASM  := $(patsubst %.c,%.s,$(C_SRCS))
 C_BINS := $(patsubst %.c,%.out,$(C_SRCS))
 X86_SRCS := $(wildcard *_x86.s)
 X86_BINS := $(patsubst %.s,%.out,$(X86_SRCS))
-BINS := $(C_BINS) $(X86_BINS) 
+BINS := $(C_BINS) $(X86_BINS)
 
 
 .PHONY: all
@@ -47,4 +51,4 @@ $(BINS): Makefile
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
 
 %.out: %.s
-	$(CC) $(CFLAGS) $(<) -o $(@)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(<) -o $(@)
