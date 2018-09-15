@@ -1,7 +1,9 @@
+#include "xutils.h"
+
 .text
 
-.globl _main
-_main:
+.globl CSYM(main)
+CSYM(main):
   # Set up the stack
   pushl %ebp
   movl %esp, %ebp
@@ -13,7 +15,7 @@ _main:
   pushl $hello_world
 
   # In the debugger check `expression -f hex -- $esp & 0xF` is 0 at this point to prove stack alignment
-  calll _printf
+  calll CSYM(printf)
 
   # Remove the padding and argument from the stack
   addl $8, %esp

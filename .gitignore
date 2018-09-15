@@ -2,3 +2,9 @@
 *.dSYM
 /tmp
 /book
+
+# Ignore intermediate .s files generated from .c files
+*.s
+
+# Don't ignore any assembly source files
+!*_x86.s

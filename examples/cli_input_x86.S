@@ -1,7 +1,9 @@
+#include "xutils.h"
+
 .text
 
 .globl _main
-_main:
+CSYM(main):
   # Set up the stack
   pushl %ebp
   movl %esp, %ebp
