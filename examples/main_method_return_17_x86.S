@@ -1,6 +1,8 @@
+#include "xutils.h"
+
 	.text
-	.globl	_main
-_main:
+	.globl CSYM(main)
+CSYM(main):
 	pushl	%ebp
 	movl	%esp, %ebp
 	pushl	%eax
