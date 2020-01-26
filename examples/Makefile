@@ -2,6 +2,8 @@ CC ?= cc
 # CFLAGS += -g
 CFLAGS += -O1
 CFLAGS += -m32
+# Prevents the .cfi_* directives appearing in the assembler output
+CFLAGS += -fno-asynchronous-unwind-tables
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
@@ -47,7 +49,7 @@ info:
 clean:
 	rm -rf *.out *.dSYM $(C_ASM)
 
-$(BINS): Makefile
+$(BINS) $(C_ASM): Makefile
 
 %.s: %.c
 	$(CC) $(CFLAGS) -S $(<) -o $(@)
